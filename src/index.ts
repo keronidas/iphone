@@ -25,14 +25,18 @@ import {
     // Texture, // Import THREE.js internals
 } from "webgi";
 import "./styles.css";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-async function setupViewer(){
+gsap.registerPlugin(ScrollTrigger);
+
+async function setupViewer() {
 
     // Initialize the viewer
     const viewer = new ViewerApp({
         canvas: document.getElementById('webgi-canvas') as HTMLCanvasElement,
         useRgbm: false,
-       
+
     })
 
     // Add plugins individually.
@@ -70,10 +74,20 @@ async function setupViewer(){
     // await viewer.setEnvironmentMap("./assets/environment.hdr");
 
     // Add some UI for tweak and testing.
-    const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin)
+    // const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin)
     // Add plugins to the UI to see their settings.
-    uiPlugin.setupPlugins<IViewerPlugin>(TonemapPlugin, CanvasSnipperPlugin)
+    // uiPlugin.setupPlugins<IViewerPlugin>(TonemapPlugin, CanvasSnipperPlugin)
 
+    const camera = viewer.scene.activeCamera;
+    const position = camera.position;
+    const target = camera.target;
+
+
+    function setupScrollanimation() {
+        const tl = gsap.timeline()
+        // 
+        tl.to(position, { x: 5, scrollTrigger: { trigger: "second", start: "top top", end: "bottom top", scrub: true } })
+    }
+    setupScrollanimation()
 }
-
 setupViewer()
